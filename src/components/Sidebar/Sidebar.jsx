@@ -1,48 +1,37 @@
 import { HiOfficeBuilding } from "react-icons/hi";
 import { Menu } from "antd";
-import {
-  HomeOutlined,
-  SettingOutlined,
-  CarOutlined,
-  SnippetsOutlined,
-  ShopOutlined,
-} from "@ant-design/icons";
+import { CarOutlined, SnippetsOutlined, ShopOutlined } from "@ant-design/icons";
+import { BiCategory } from "react-icons/bi";
 import { useSidebarCollapse } from "../../zustand/SidebarCollapseStore";
 import { useNavigate } from "react-router-dom";
 
 const items = [
   {
     key: "1",
-    icon: <HomeOutlined style={{ fontSize: "1.2rem" }} />,
-    label: "Dashboard",
+    icon: <BiCategory style={{ fontSize: "1.2rem" }} />,
+    label: "Categories",
     link: "/",
   },
   {
     key: "2",
-    icon: <SettingOutlined style={{ fontSize: "1.2rem" }} />,
-    label: "Settings",
-    link: "/settings",
-  },
-  {
-    key: "3",
     icon: <ShopOutlined style={{ fontSize: "1.2rem" }} />,
     label: "Brands",
     link: "/brands",
   },
   {
-    key: "4",
+    key: "3",
     icon: <SnippetsOutlined style={{ fontSize: "1.2rem" }} />,
     label: "Models",
     link: "/models",
   },
   {
-    key: "6",
+    key: "4",
     icon: <HiOfficeBuilding style={{ fontSize: "1.2rem" }} />,
     label: "Cities",
     link: "/cities",
   },
   {
-    key: "7",
+    key: "5",
     icon: <CarOutlined style={{ fontSize: "1.2rem" }} />,
     label: "Cars",
     link: "/cars",

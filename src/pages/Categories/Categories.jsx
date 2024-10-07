@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import debounce from "lodash.debounce";
 import { message, Table } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { apiRequest } from "../../utils/api";
 import { useModal } from "../../zustand/ModalStore";
-import { SettingModal } from "../../utils/SettingModal";
 import { useIdStore } from "../../zustand/IdStore";
+import { apiRequest } from "../../utils/api";
+import { CategoryModal } from "../../utils/CategoryModal";
 
 function Settings(props) {
   const [categories, setCategories] = useState([]);
@@ -142,7 +142,7 @@ function Settings(props) {
         rowKey={"id"}
         scroll={{ x: 800 }}
       />
-      <SettingModal getApi={fetchCategories} data={categories} />
+      <CategoryModal getApi={fetchCategories} data={categories} />
     </>
   );
 }

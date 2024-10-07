@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { useModal } from "../zustand/ModalStore";
 import { Modal, Switch, message } from "antd";
+import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 import { apiRequest } from "./api";
+import { useModal } from "../zustand/ModalStore";
 import { useIdStore } from "../zustand/IdStore";
 
 export function CarModal({ getApi, data }) {
@@ -11,8 +12,6 @@ export function CarModal({ getApi, data }) {
   const [modelsData, setModelsData] = useState([]);
   const [locationsData, setLocationsData] = useState([]);
   const [citiesData, setCitiesData] = useState([]);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
 
   // Data id
   const [categoryId, setCategoryId] = useState("");
@@ -44,9 +43,12 @@ export function CarModal({ getApi, data }) {
   const [secondImg, setSecondImg] = useState(null);
   const [coverImg, setCoverImg] = useState(null);
 
-  const coverImgRef = useRef(null);
+  const [imgPreview, setImgPreview] = useState(null);
+  const [isPreviewVisible, setIsPreviewVisible] = useState(false);
+
   const firstImgRef = useRef(null);
   const secondImgRef = useRef(null);
+  const coverImgRef = useRef(null);
   const [errors, setErrors] = useState({});
   const {
     isCreateCarOpen,
@@ -119,6 +121,7 @@ export function CarModal({ getApi, data }) {
       setModelId(item.model_id || "");
       setLocationId(item.location_id || "");
       setCityId(item.city_id || "");
+
       setColor(item.color || "");
       setYear(item.year || "");
       setSeconds(item.seconds || "");
@@ -135,8 +138,23 @@ export function CarModal({ getApi, data }) {
       setPriceUsd(item.price_in_usd || "");
       setPriceAedSale(item.price_in_aed_sale || "");
       setPriceUsdSale(item.price_in_usd_sale || "");
+
+      setImgPreview(null);
     }
   }, [item]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFirstImg(file);
+      setImgPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleImageDelete = () => {
+    setFirstImg(null);
+    setImgPreview(null);
+  };
 
   const formValidation = () => {
     const formErrors = {};
@@ -249,6 +267,7 @@ export function CarModal({ getApi, data }) {
   };
 
   const handleCloseModal = () => {
+    setImgPreview(null);
     setErrors("");
     closeEditCarModal();
     closeCreateCarModal();
@@ -578,21 +597,45 @@ export function CarModal({ getApi, data }) {
             type="file"
             id="firstImg"
             accept=".jpg,.jpeg,.png"
-            onChange={(e) => setFirstImg(e.target.files[0])}
+            onChange={handleImageChange}
             className={`border-2 rounded-lg py-2 px-4 hidden ${
               errors.image ? "border-red-500" : "border-gray-300"
             }`}
           />
-          <div className="border-2 border-dotted w-24 h-24 rounded-lg">
-            <button
-              type="button"
-              onClick={() => {
-                firstImgRef?.current.click();
-              }}
-              className="bg-gray-200 w-full h-full rounded-lg"
-            >
-              Upload
-            </button>
+          <div className="flex gap-4">
+            {imgPreview && ( // Display preview with icons
+              <div className="relative border-2 border-dotted w-24 h-24 rounded-lg group">
+                <img
+                  src={imgPreview}
+                  alt="Preview"
+                  className="w-full h-full object-cover rounded-lg"
+                />
+                {/* Overlay appears on hover */}
+                <div className="absolute inset-0 bg-black bg-opacity-60 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-2 transition-opacity">
+                  {/* Preview icon */}
+                  <EyeOutlined
+                    onClick={() => setIsPreviewVisible(true)} // Open large preview modal
+                    className="text-white cursor-pointer"
+                  />
+                  {/* Delete icon */}
+                  <DeleteOutlined
+                    onClick={handleImageDelete} // Remove image
+                    className="text-white cursor-pointer"
+                  />
+                </div>
+              </div>
+            )}
+            <div className="border-2 border-dotted w-24 h-24 rounded-lg">
+              <button
+                type="button"
+                onClick={() => {
+                  firstImgRef?.current.click();
+                }}
+                className="bg-gray-200 w-full h-full rounded-lg"
+              >
+                Upload
+              </button>
+            </div>
           </div>
           {errors.firstImg && (
             <span className="text-red-500 text-sm">{errors.firstImg}</span>
@@ -652,6 +695,18 @@ export function CarModal({ getApi, data }) {
             <span className="text-red-500 text-sm">{errors.coverImg}</span>
           )}
         </form>
+      </Modal>
+      <Modal
+        visible={isPreviewVisible}
+        footer={null}
+        onCancel={() => setIsPreviewVisible(false)}
+        centered
+      >
+        <img
+          src={imgPreview}
+          alt="Preview"
+          className="w-full h-full object-contain"
+        />
       </Modal>
     </div>
   );

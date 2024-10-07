@@ -133,6 +133,8 @@ export function ModelModal({ getApi, data }) {
           {errors.name && (
             <span className="text-red-500 text-sm">{errors.name}</span>
           )}
+
+          {/* Brand */}
           <label htmlFor="brand">* Brand</label>
           <select
             id="brand"
